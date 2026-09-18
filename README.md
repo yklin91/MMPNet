@@ -9,12 +9,7 @@ The repository provides a complete workflow from raw data preparation and CSV in
 - Convert raw data into CSV-based dataset indexes.
 - Centralized dataset loading, normalization, augmentation, and DataLoader creation.
 - ConcatNet-MSDS as the main segmentation architecture.
-- Multiple segmentation loss components, including:
-  - Focal Loss
-  - Dice Loss
-  - clDice Loss
-  - Tversky Loss
-  - MSDS Loss
+- Segmentation loss components: Focal Loss, Dice Loss, clDice Loss, Tversky Loss, and MSDS Loss.
 - A single training entry point through `train.py`.
 - Validation and checkpoint management through the training engine.
 - Test-set evaluation through `evaluate.py`.
@@ -49,80 +44,136 @@ mmpnet_github/
 ```
 
 ## Installation
-Clone the repository and install the required dependencies:
 
-git clone <YOUR_REPOSITORY_URL>
+Clone the repository, replacing `<YOUR_REPOSITORY_URL>` with the actual repository URL:
+
+```bash
+git clone <YOUR_REPOSITORY_URL> mmpnet_github
 cd mmpnet_github
+```
 
+Create a virtual environment:
+
+```bash
 python -m venv .venv
+```
+
+On Linux or macOS, activate the virtual environment with:
+
+```bash
 source .venv/bin/activate
+```
 
-pip install --upgrade pip
-pip install -r requirements.txt
-For Windows PowerShell, activate the virtual environment with:
+On Windows PowerShell, activate it with:
 
+```powershell
 .venv\Scripts\Activate.ps1
+```
+
+Install the required dependencies:
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
 
 ## Environment Variables
-Set the data and output directories before running the pipeline:
 
+Set the data and output directories before running the pipeline.
+
+On Linux or macOS:
+
+```bash
 export MMPNET_DATA_DIR=/path/to/data
 export MMPNET_OUTPUT_DIR=/path/to/outputs
-MMPNET_DATA_DIR should contain the raw input data required by prepare_data.py.
+```
 
-MMPNET_OUTPUT_DIR is used for generated indexes, logs, checkpoints, evaluation results, and prediction outputs, depending on the selected entry point.
+On Windows PowerShell:
+
+```powershell
+$env:MMPNET_DATA_DIR = "C:\path\to\data"
+$env:MMPNET_OUTPUT_DIR = "C:\path\to\outputs"
+```
+
+Replace the example paths with your actual directory paths.
+
+| Variable | Description |
+| --- | --- |
+| `MMPNET_DATA_DIR` | Root directory containing the input data required by `prepare_data.py`. |
+| `MMPNET_OUTPUT_DIR` | Output directory for the pipeline. Refer to the relevant script for specific output files and subdirectories. |
 
 ## Data Preparation
+
 Run the data preparation script before training:
 
+```bash
 python prepare_data.py
-This script converts the raw dataset into CSV-based indexes used by mmpnet/data.py.
+```
 
-The expected raw-data structure and file naming conventions are dataset-specific. Check prepare_data.py and the documentation under docs/ before running the preparation step.
+This script converts the raw dataset into CSV-based indexes used by `mmpnet/data.py`.
+
+The expected raw-data structure and file naming conventions are dataset-specific. Check `prepare_data.py` and any relevant documentation under `docs/` before running the preparation step.
 
 ## Training
-The only supported training entry point is train.py.
 
-Example:
+The training entry point is `train.py`.
 
+For example, train for 50 epochs with a batch size of 8:
+
+```bash
 python train.py --epochs 50 --batch_size 8
-To view all available command-line options:
+```
 
+To view the available command-line options:
+
+```bash
 python train.py --help
+```
+
 The training pipeline includes:
 
-Dataset loading and preprocessing.
-Data augmentation.
-Model construction.
-Loss computation.
-Training and validation loops.
-Logging.
-Checkpoint saving.
+- Dataset loading and preprocessing.
+- Data augmentation.
+- Model construction.
+- Loss computation.
+- Training and validation loops.
+- Logging.
+- Checkpoint saving.
 
 ## Evaluation
+
 Evaluate a trained model on the test set with:
 
-python evaluate.py \
-    --checkpoint /path/to/best_checkpoint.pth
-To view all evaluation options:
+```bash
+python evaluate.py --checkpoint /path/to/best_checkpoint.pth
+```
 
+Replace `/path/to/best_checkpoint.pth` with the path to your trained checkpoint.
+
+To view the available evaluation options:
+
+```bash
 python evaluate.py --help
+```
 
 ## Prediction
-The repository provides prediction scripts for several supported datasets and inference modes.
+
+The repository provides prediction scripts for several datasets and inference modes.
+
+| Script | Purpose |
+| --- | --- |
+| `scripts/predict-sh2023-concatnet.py` | Prediction on the SH2023 dataset. |
+| `scripts/predict-sh2024-concatnet.py` | Prediction on the SH2024 dataset. |
+| `scripts/predict-sh2026-concatnet.py` | Prediction on the SH2026 dataset. |
+| `scripts/predict-sh2026-concatnet-overlap.py` | Overlap-based prediction on SH2026. |
+| `scripts/predict-worldfld-concatnet.py` | Prediction on the WorldFLD dataset. |
 
 Use the help command for the corresponding script to inspect its available arguments:
 
+```bash
 python scripts/predict-sh2023-concatnet.py --help
 python scripts/predict-sh2024-concatnet.py --help
 python scripts/predict-sh2026-concatnet.py --help
 python scripts/predict-sh2026-concatnet-overlap.py --help
 python scripts/predict-worldfld-concatnet.py --help
-The available prediction entry points are:
-
-Script	Purpose
-predict-sh2023-concatnet.py	Prediction on the SH2023 dataset
-predict-sh2024-concatnet.py	Prediction on the SH2024 dataset
-predict-sh2026-concatnet.py	Prediction on the SH2026 dataset
-predict-sh2026-concatnet-overlap.py	Overlap-based prediction on SH2026
-predict-worldfld-concatnet.py	Prediction on the WorldFLD dataset
+```
