@@ -23,6 +23,8 @@ The repository provides a complete workflow from raw data preparation and CSV in
 - A simplified codebase focused on the main MMPNet workflow.
 
 ## Repository Structure
+
+```text
 mmpnet_github/
 ├── prepare_data.py
 ├── train.py
@@ -44,6 +46,7 @@ mmpnet_github/
 ├── docs/
 ├── README.md
 └── requirements.txt
+```
 
 ## Installation
 Clone the repository and install the required dependencies:
